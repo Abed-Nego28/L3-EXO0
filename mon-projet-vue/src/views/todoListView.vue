@@ -40,7 +40,10 @@ const handleDelete = (id: number) => {
 
     </form>
     <ol>
-      <li v-for="item in listToDoList" :key="item.id"><a :href="item.name">{{item.name}} {{item.desc}}</a>
+      <li v-for="item in listToDoList" :key="item.id">
+        <router-link :to="{ name: 'todolist-item', params: { id: item.id }}">
+          {{ item.name }} {{ item.desc }}
+        </router-link>
         <button @click="handleDelete(item.id)">Delete</button>
       </li>
     </ol>

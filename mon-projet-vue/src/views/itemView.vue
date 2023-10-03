@@ -1,17 +1,39 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
+import TodoListView from "@/App.vue";
+import {useTodoListStore} from "@/stores/todoList";
+import {getCurrentInstance, onBeforeMount, ref} from "vue";
+
+const toDoListStore = useTodoListStore();
+const instance = getCurrentInstance();
+
+const todoList = ref({ name: '', desc: '' })
+
+onBeforeMount(() => {
+    const params = instance?.proxy?.$route.params || '{}'
+  if (params === '{}'){
+    return
+  }
+  console.log(typeof params.id)
+    const todoListItem = toDoListStore.getTodoLists.find(item => item.id === parseInt( params.id as string))
+    if (todoListItem) {
+      todoList.value = { ...todoListItem };
+    }
+
+})
 </script>
 
 <template>
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/todolist">TodoList</RouterLink>
-      </nav>
+    <div class="todolist-item">
+      <h2>To Do Details</h2>
+      <div v-if="todoList">
+        <h1>Name: {{ todoList.name }}</h1>
+        <h2>Description: {{ todoList.desc }}</h2>
+      </div>
+      <router-link to="/todolist">Back to ToDoList</router-link>
     </div>
 
-  <RouterView />
+
 </template>
 
 <style scoped>
